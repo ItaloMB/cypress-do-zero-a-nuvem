@@ -186,4 +186,50 @@ it('acessa a página da política de privacidade removendo o target e então cli
     .should('be.visible')
 } )
 
+it('exibe e oculta as mensagens de sucesso e erro usando .invoke()', () => {
+  cy.get('.success')
+    .should('not.be.visible')
+    .invoke('show')
+    .should('be.visible')
+    .and('contain', 'Mensagem enviada com sucesso.')
+    .invoke('hide')
+    .should('not.be.visible')
+  cy.get('.error')
+    .should('not.be.visible')
+    .invoke('show')
+    .should('be.visible')
+    .and('contain', 'Valide os campos obrigatórios!')
+    .invoke('hide')
+    .should('not.be.visible')
+})
+
+it('preenche o campo da área de texto usando o comando invoke', ()=> {
+  cy.get('#open-text-area')
+    .invoke('val', 'Um texto qualquer.')
+    .should('have.value', 'Um texto qualquer.')
+})
+
+it('faz uma requisição HTTP', () => {
+  cy.request('https://cac-tat-v3.s3.eu-central-1.amazonaws.com/index.html')
+    .as('getRequest')
+    .its('status')
+    .should('be.equal', 200)
+  cy.get('@getRequest')
+    .its('statusText')
+    .should('be.equal', 'OK')
+  cy.get('@getRequest')
+    .its('body')
+    .should('include', 'CAC TAT')
+})
+
+it('Encontre o gato escondido', () => {
+  cy.get('#cat')
+    .invoke('show')
+    .should('be.visible')
+  cy.get('#title')
+    .invoke('text', 'CAT TAT')
+  cy.get('#subtitle')
+    .invoke('text', 'Eu amo Gatos')
+})
+
 })
